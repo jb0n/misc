@@ -1,0 +1,18 @@
+set tabstop=4 
+set shiftwidth=4
+set expandtab 
+set hlsearch
+syntax on
+filetype indent plugin on
+colorscheme elflord
+
+au BufEnter  [Mm]akefile*  set noet
+au BufLeave  [Mm]akefile*  set et
+au BufEnter  GNUmakefile*  set noet
+au BufLeave  GNUmakefile*  set et
+au BufEnter  gnumakefile*  set noet
+au BufLeave  gnumakefile*  set et
+
+
+
+
