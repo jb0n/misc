@@ -3,6 +3,7 @@ set shiftwidth=4
 set expandtab 
 set hlsearch
 set autoindent
+colorscheme elflord
 
 au BufEnter  [Mm]akefile*  set noet
 au BufLeave  [Mm]akefile*  set et
