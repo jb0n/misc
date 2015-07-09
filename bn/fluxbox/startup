@@ -31,9 +31,10 @@ fi
 konsole --nofork --geometry 720x1400+1920+10 &
 konsole --nofork --geometry 720x1400+2640+10 &
 konsole --nofork --geometry 720x1400+3360+10 &
-
-google-chrome&
-pidgin&
+google-chrome &
+pidgin &
+xscreensaver -no-splash &
+#fbsetbg -f /home/jgould/img/red_snake.jpg
 
 exec fluxbox
 # or if you want to keep a log:
