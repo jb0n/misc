@@ -90,6 +90,9 @@ class Loop(object):
     def stop(self):
         libuv.uv_stop(self.loop_h)
 
+    def now(self):
+        return libuv.uv_now(self.loop_h)
+
 
 def default_close_cb(uv_handle_t, handle):
     """Remove extra reference to the Handle object when closed
@@ -369,3 +372,9 @@ class Poll(Handle):
             raise Exception('uv_poll_stop() failed: {}'.format(err))
 
         self._stop_called = True
+
+
+class Process(object):
+    @classmethod
+    def disable_stdio_inheritance(cls):
+        libuv.uv_disable_stdio_inheritance()

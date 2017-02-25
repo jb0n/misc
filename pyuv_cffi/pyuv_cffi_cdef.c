@@ -42,6 +42,7 @@ uv_loop_t *uv_default_loop();
 int uv_loop_init(uv_loop_t* loop);
 int uv_loop_alive(const uv_loop_t *loop);
 int uv_run(uv_loop_t *, uv_run_mode mode);
+uint64_t uv_now(const uv_loop_t* loop);
 void uv_stop(uv_loop_t *);
 void uv_walk(uv_loop_t *loop, uv_walk_cb walk_cb, void *arg);
 
@@ -103,3 +104,6 @@ int uv_signal_stop(uv_signal_t *handle);
 int uv_poll_init(uv_loop_t *loop, uv_poll_t *handle, int fd);
 int uv_poll_start(uv_poll_t *handle, int events, uv_poll_cb cb);
 int uv_poll_stop(uv_poll_t *handle);
+
+// process functions
+void uv_disable_stdio_inheritance(void);
