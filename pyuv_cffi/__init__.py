@@ -378,3 +378,11 @@ class Process(object):
     @classmethod
     def disable_stdio_inheritance(cls):
         libuv.uv_disable_stdio_inheritance()
+
+
+class Pipe(Handle):
+    def __init__(self, loop, ipc):
+        self.loop = loop
+        self.ipc = ipc
+        self.handle = ffi.new('uv_pipe_t *')
+        libuv.uv_pipe_init(loop.loop_h, self.handle, int(ipc))

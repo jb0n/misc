@@ -18,6 +18,8 @@ struct uv_timer_s {...;};
 struct uv_signal_s {...;};
 struct uv_poll_s {...;};
 struct uv_check_s {...;};
+struct uv_pipe_s {...;};
+
 
 typedef struct uv_loop_s uv_loop_t;
 typedef struct uv_handle_s uv_handle_t;
@@ -27,6 +29,7 @@ typedef struct uv_timer_s uv_timer_t;
 typedef struct uv_signal_s uv_signal_t;
 typedef struct uv_poll_s uv_poll_t;
 typedef struct uv_check_s uv_check_t;
+typedef struct uv_pipe_s uv_pipe_t;
 
 typedef void (*uv_walk_cb)(uv_handle_t *handle, void *arg);
 typedef void (*uv_close_cb)(uv_handle_t *handle);
@@ -107,3 +110,7 @@ int uv_poll_stop(uv_poll_t *handle);
 
 // process functions
 void uv_disable_stdio_inheritance(void);
+
+// pipe functions
+int uv_pipe_init(uv_loop_t *loop, uv_pipe_t *pipe, int ipc);
+
