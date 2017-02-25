@@ -192,7 +192,7 @@ class Idle(Handle):
         self.loop = loop
         self.handle = ffi.new('uv_idle_t *')
         libuv.uv_idle_init(loop.loop_h, self.handle)
-        super().__init__(self.handle)
+        Handle.__init__(self, self.handle)
 
     def start(self, callback):
         """Start the idle handle
@@ -218,7 +218,7 @@ class Prepare(Handle):
         self.loop = loop
         self.handle = ffi.new('uv_prepare_t *')
         libuv.uv_prepare_init(loop.loop_h, self.handle)
-        super().__init__(self.handle)
+        Handle.__init__(self, self.handle)
 
     def start(self, callback):
         """
@@ -243,7 +243,7 @@ class Check(Handle):
         self.loop = loop
         self.handle = ffi.new('uv_check_t *')
         libuv.uv_check_init(loop.loop_h, self.handle)
-        super().__init__(self.handle)
+        Handle.__init__(self, self.handle)
 
     def start(self, callback):
         """
@@ -268,7 +268,7 @@ class Timer(Handle):
         self.loop = loop
         self.handle = ffi.new('uv_timer_t *')
         libuv.uv_timer_init(loop.loop_h, self.handle)
-        super().__init__(self.handle)
+        Handle.__init__(self, self.handle)
 
         self._repeat = None
         self._stop_called = False
@@ -310,7 +310,7 @@ class Signal(Handle):
         self.loop = loop
         self.handle = ffi.new('uv_signal_t *')
         libuv.uv_signal_init(loop.loop_h, self.handle)
-        super().__init__(self.handle)
+        Handle.__init__(self, self.handle)
 
         self._handle_allocated = True
 
@@ -342,7 +342,7 @@ class Poll(Handle):
         self.fd = fd
         self.handle = ffi.new('uv_poll_t *')
         libuv.uv_poll_init(loop.loop_h, self.handle, fd)
-        super().__init__(self.handle)
+        Handle.__init__(self, self.handle)
 
         self._stop_called = False
 
