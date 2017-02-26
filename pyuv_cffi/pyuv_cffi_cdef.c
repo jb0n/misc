@@ -19,7 +19,7 @@ struct uv_signal_s {...;};
 struct uv_poll_s {...;};
 struct uv_check_s {...;};
 struct uv_pipe_s {...;};
-
+struct uv_fs_event_s {...;};
 
 typedef struct uv_loop_s uv_loop_t;
 typedef struct uv_handle_s uv_handle_t;
@@ -30,6 +30,7 @@ typedef struct uv_signal_s uv_signal_t;
 typedef struct uv_poll_s uv_poll_t;
 typedef struct uv_check_s uv_check_t;
 typedef struct uv_pipe_s uv_pipe_t;
+typedef struct uv_fs_event_s uv_fs_event_t;
 
 typedef void (*uv_walk_cb)(uv_handle_t *handle, void *arg);
 typedef void (*uv_close_cb)(uv_handle_t *handle);
@@ -39,6 +40,7 @@ typedef void (*uv_poll_cb)(uv_poll_t *handle, int status, int events);
 typedef void (*uv_timer_cb)(uv_timer_t *handle);
 typedef void (*uv_signal_cb)(uv_signal_t *handle, int signum);
 typedef void (*uv_check_cb)(uv_check_t* handle);
+typedef void (*uv_fs_event_cb)(uv_fs_event_t* handle, const char* filename, int events, int status);
 
 // loop functions
 uv_loop_t *uv_default_loop();
@@ -114,3 +116,7 @@ void uv_disable_stdio_inheritance(void);
 // pipe functions
 int uv_pipe_init(uv_loop_t *loop, uv_pipe_t *pipe, int ipc);
 
+//fs_event functions
+int uv_fs_event_init(uv_loop_t* loop, uv_fs_event_t* handle);
+int uv_fs_event_start(uv_fs_event_t* handle, uv_fs_event_cb cb, const char* path,
+                      unsigned int flags);

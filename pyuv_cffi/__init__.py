@@ -386,3 +386,19 @@ class Pipe(Handle):
         self.ipc = ipc
         self.handle = ffi.new('uv_pipe_t *')
         libuv.uv_pipe_init(loop.loop_h, self.handle, int(ipc))
+
+
+class fs(object):
+    class FSEvent(Handle):
+        def __init__(self, loop):
+            self.loop = loop
+            self.handle = ffi.new('uv_fs_event_t *')
+            libuv.uv_fs_event_init(loop.loop_h, self.handle)
+        
+        def start(self, callback, path, flags):
+            def cb_wrapper(uv_fs_event_t, path, flags):
+                callback(path, flags)
+            cb_str = 'void (*)(uv_fs_event_t* handle, const char* filename, int events, int status)'
+            self._ffi_cb = ffi.callback(cb_str, cb_wrapper)
+            libuv.uv_fs_event_start(self.handle, self._ffi_cb, path, flags)
+
