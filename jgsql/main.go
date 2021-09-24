@@ -16,7 +16,7 @@ type dbConfig struct {
 	Host     string
 	User     string
 	Pass     string
-	Port     int
+	Port     uint16
 	Database string
 	SSLMode  string
 	Verbose  bool
@@ -28,17 +28,22 @@ func getConfig() (*dbConfig, error) {
 	}
 	pgpassEntry := os.Args[1]
 
-	cfg, err := parsePgpass(pgpassEntry)
+	cfgs, err := parsePgpass()
 	if err != nil {
 		return nil, err
 	}
-	fmt.Printf("Using .pgpass data for prefix '%s\n", pgpassEntry)
-	return cfg, nil
+	for _, cfg := range cfgs {
+		if strings.HasPrefix(cfg.Host, pgpassEntry) {
+			fmt.Printf("Using .pgpass data for prefix '%s\n", pgpassEntry)
+			return cfg, nil
+		}
+	}
+	return nil, fmt.Errorf("couldn't find entry for '%s' in ~/.pgpass", pgpassEntry)
 }
 
 // this function makes a lot of assumptions about how the ~.pgpass file is going to look and what
 // entries it'll have specifically, but I think they're safe assumptions
-func parsePgpass(entryPfx string) (*dbConfig, error) {
+func parsePgpass() ([]*dbConfig, error) {
 	usr, err := user.Current()
 	if err != nil {
 		return nil, err
@@ -50,30 +55,33 @@ func parsePgpass(entryPfx string) (*dbConfig, error) {
 		return nil, err
 	}
 	lines := strings.Split(string(b), "\n")
-	var cfg *dbConfig
+	var cfgs []*dbConfig
 	for i, line := range lines {
-		if strings.HasPrefix(line, entryPfx) { // assumes first match is good enough.
-			cfg = &dbConfig{}
-			fields := strings.Split(line, ":")
-			if len(fields) != 5 {
-				return nil, fmt.Errorf("the line #%d had only %d fields, expected 5", i+1,
-					len(fields))
-			}
-			cfg.Host = fields[0]
-			port, parseErr := strconv.ParseInt(fields[1], 10, 16)
-			if parseErr != nil {
-				return nil, fmt.Errorf("bad port '%s'", fields[1])
-			}
-			cfg.Port = int(port)
-			cfg.Database = fields[2]
-			cfg.User = fields[3]
-			cfg.Pass = fields[4]
-			cfg.SSLMode = "disable"
-			cfg.Verbose = true
-			return cfg, nil
+		cfg := &dbConfig{}
+		line = strings.TrimSpace(line)
+		if line == "" || strings.HasPrefix(line, "#") {
+			continue
 		}
+		fields := strings.Split(line, ":")
+		if len(fields) != 5 {
+			return nil, fmt.Errorf("the line #%d had only %d fields, expected 5", i+1,
+				len(fields))
+		}
+		cfg.Host = fields[0]
+		port, parseErr := strconv.ParseInt(fields[1], 10, 16)
+		if parseErr != nil {
+			return nil, fmt.Errorf("bad port '%s'", fields[1])
+		}
+		cfg.Port = uint16(port)
+		cfg.Database = fields[2]
+		cfg.User = fields[3]
+		cfg.Pass = fields[4]
+		cfg.SSLMode = "disable"
+		cfg.Verbose = true
+		cfgs = append(cfgs, cfg)
 	}
-	return nil, fmt.Errorf("couldn't find entry for '%s' in %s", entryPfx, fn)
+	return cfgs, nil
+	//fmt.Errorf("couldn't find entry for '%s' in %s", entryPfx, fn)
 }
 
 func dieOnErr(err error) {
@@ -84,6 +92,16 @@ func dieOnErr(err error) {
 }
 
 func main() {
+	if len(os.Args) == 1 {
+		cfgs, err := parsePgpass()
+		if err != nil {
+			dieOnErr(err)
+		}
+		for _, cfg := range cfgs {
+			fmt.Println(cfg.Host)
+		}
+		return
+	}
 	cfg, err := getConfig()
 	dieOnErr(err)
 	fmt.Printf("Connecting to %s as %s\n", cfg.Host, cfg.User)
