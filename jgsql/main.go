@@ -81,7 +81,6 @@ func parsePgpass() ([]*dbConfig, error) {
 		cfgs = append(cfgs, cfg)
 	}
 	return cfgs, nil
-	//fmt.Errorf("couldn't find entry for '%s' in %s", entryPfx, fn)
 }
 
 func dieOnErr(err error) {
