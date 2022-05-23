@@ -1,32 +1,32 @@
 #!/usr/bin/env bash
 
 set -e
+set -v
 
 sudo apt-get install git vim
 VIM_PLUGINS_DIR=~/.vim/pack/plugins/start
 
-VIM_GO_URL=https://github.com/fatih/vim-go.git
-VIM_GO_DIR=$VIM_PLUGINS_DIR/vim-go
+VIM_GO_URL=https://github.com/fatih/vim-go
 
-ALE_URL=https://github.com/dense-analysis/ale.git
-ALE_DIR=$VIM_PLUGINS_DIR/ale
+ALE_URL=https://github.com/dense-analysis/ale
 
-GIT_URL=https://github.com/tpope/vim-fugitive.git
-GIT_DIR=$VIM_PLUGINS_DIR/fugitive
+GIT_URL=https://github.com/tpope/vim-fugitive
 
 function vim_plugin {
-    if [ ! -d $2 ]
+    iname=$(basename $1)
+    idir=$VIM_PLUGINS_DIR/$iname
+    if [ ! -d $idir ]
         then
-        echo "installing $2"
-        git clone --depth=1 $1 $2
+        echo "installing $1"
+        git clone --depth=1 $1 $idir
     else
-       echo "updating $2"
-       cd $2 && git pull
+       echo "updating $1"
+       cd $idir && git pull
     fi
 }
 
 mkdir -p $VIM_PLUGINS_DIR
-vim_plugin $VIM_GO_URL $VIM_GO_DIR
-vim_plugin $ALE_URL $ALE_DIR
-vim_plugin $GIT_URL $GIT_DIR
+vim_plugin $VIM_GO_URL
+vim_plugin $ALE_URL
+vim_plugin $GIT_URL
 
