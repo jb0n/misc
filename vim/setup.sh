@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
 
 set -e
-set -v
+#set -v
 
 sudo apt-get install git vim
 VIM_PLUGINS_DIR=~/.vim/pack/plugins/start
 
 VIM_GO_URL=https://github.com/fatih/vim-go
-
 ALE_URL=https://github.com/dense-analysis/ale
-
 GIT_URL=https://github.com/tpope/vim-fugitive
+EM_URL=https://github.com/easymotion/vim-easymotion
+
 
 function vim_plugin {
     iname=$(basename "$1")
@@ -22,6 +22,7 @@ function vim_plugin {
     else
        echo "updating $1"
        cd "$idir" && git pull
+       cd -
     fi
 }
 
@@ -29,10 +30,11 @@ mkdir -p $VIM_PLUGINS_DIR
 vim_plugin $VIM_GO_URL
 vim_plugin $ALE_URL
 vim_plugin $GIT_URL
+vim_plugin $EM_URL
 
 if [ ! -e ~/.vimrc ]
     then
-	cp files/vimrc ~/.vimrc
+        cp files/vimrc ~/.vimrc
 fi
 
 if [ ! -d ~/.vim/plugins ]
@@ -42,21 +44,24 @@ fi
 
 echo "$PWD"
 if [ ! -e ~/.vim/plugins/ale.vim ]
-	then
-	cp files/ale.vim ~/.vim/plugins/ale.vim
+        then
+        cp files/ale.vim ~/.vim/plugins/ale.vim
 fi
 
-if [ ! -e ~/.vim/ale_linter.vim ]
+if [ ! -h ~/.vim/ale_linter.vim ]
     then
     ln -s ~/.vim/pack/plugins/start/ale/ale_linters/go/golangci_lint.vim ~/.vim/ale_linter.vim
 fi
 
 
 if [ ! -e ~/.fonts/Fira_Code_v6.2.zip ]
-	then
+        then
     mkdir -p ~/.fonts
     cd ~/.fonts/
     wget https://github.com/tonsky/FiraCode/releases/download/6.2/Fira_Code_v6.2.zip
     unzip Fira_Code_v6.2.zip
     fc-cache -f -v
 fi
+
+echo "ok, all set"
+
