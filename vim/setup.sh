@@ -13,15 +13,15 @@ ALE_URL=https://github.com/dense-analysis/ale
 GIT_URL=https://github.com/tpope/vim-fugitive
 
 function vim_plugin {
-    iname=$(basename $1)
+    iname=$(basename "$1")
     idir=$VIM_PLUGINS_DIR/$iname
-    if [ ! -d $idir ]
+    if [ ! -d "$idir" ]
         then
         echo "installing $1"
-        git clone --depth=1 $1 $idir
+        git clone --depth=1 "$1" "$idir"
     else
        echo "updating $1"
-       cd $idir && git pull
+       cd "$idir" && git pull
     fi
 }
 
@@ -30,6 +30,20 @@ vim_plugin $VIM_GO_URL
 vim_plugin $ALE_URL
 vim_plugin $GIT_URL
 
+if [ ! -e ~/.vimrc ]
+    then
+	cp files/vimrc ~/.vimrc
+fi
+
+if [ ! -e ~/.vim/plugins/ale.vim ]
+	then
+	cp files/ale.vim ~/.vim/plugins/ale.vim
+fi
+
+if [ ! -e ~/.vim/ale_linter.vim ]
+    then
+    ln -s ~/.vim/pack/plugins/start/ale/ale_linters/go/golangci_lint.vim ~/.vim/ale_linter.vim
+fi
 
 
 #TODO: .vimrc, ale config
@@ -38,5 +52,3 @@ cd ~/.fonts/
 wget https://github.com/tonsky/FiraCode/releases/download/6.2/Fira_Code_v6.2.zip
 unzip Fira_Code_v6.2.zip
 fc-cache -f -v
-``
-
