@@ -35,6 +35,12 @@ if [ ! -e ~/.vimrc ]
 	cp files/vimrc ~/.vimrc
 fi
 
+if [ ! -d ~/.vim/plugins ]
+    then
+    mkdir ~/.vim/plugins
+fi
+
+echo "$PWD"
 if [ ! -e ~/.vim/plugins/ale.vim ]
 	then
 	cp files/ale.vim ~/.vim/plugins/ale.vim
@@ -46,9 +52,11 @@ if [ ! -e ~/.vim/ale_linter.vim ]
 fi
 
 
-#TODO: .vimrc, ale config
-mkdir -p ~/.fonts
-cd ~/.fonts/
-wget https://github.com/tonsky/FiraCode/releases/download/6.2/Fira_Code_v6.2.zip
-unzip Fira_Code_v6.2.zip
-fc-cache -f -v
+if [ ! -e ~/.fonts/Fira_Code_v6.2.zip ]
+	then
+    mkdir -p ~/.fonts
+    cd ~/.fonts/
+    wget https://github.com/tonsky/FiraCode/releases/download/6.2/Fira_Code_v6.2.zip
+    unzip Fira_Code_v6.2.zip
+    fc-cache -f -v
+fi
