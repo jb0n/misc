@@ -12,6 +12,9 @@ GIT_URL=https://github.com/tpope/vim-fugitive
 EM_URL=https://github.com/easymotion/vim-easymotion
 COMMITTIA_URL=https://github.com/rhysd/committia.vim
 
+FIRA_URL=https://github.com/tonsky/FiraCode/releases/download/6.2/Fira_Code_v6.2.zip
+HASKLIG_URL=https://github.com/i-tu/Hasklig/releases/download/v1.2/Hasklig-1.2.zip
+
 
 function vim_plugin {
     iname=$(basename "$1")
@@ -26,6 +29,26 @@ function vim_plugin {
        cd -
     fi
 }
+
+function install_font {
+	fname=$(basename "$1")
+	fdir=~/.fonts
+	if [ ! -e $fdir/"$fname" ]
+		then
+		if [ ! -d "$fdir" ]
+			then
+			mkdir $fdir
+		fi
+		cd $fdir
+		wget "$1"
+		unzip "$fname"
+		fc-cache -f -v
+	    cd -
+	fi
+}
+
+install_font $FIRA_URL
+install_font $HASKLIG_URL
 
 mkdir -p $VIM_PLUGINS_DIR
 vim_plugin $VIM_GO_URL
@@ -46,34 +69,13 @@ fi
 
 echo "$PWD"
 if [ ! -e ~/.vim/plugins/ale.vim ]
-        then
-        cp files/ale.vim ~/.vim/plugins/ale.vim
+    then
+    cp files/ale.vim ~/.vim/plugins/ale.vim
 fi
 
 if [ ! -h ~/.vim/ale_linter.vim ]
     then
     ln -s ~/.vim/pack/plugins/start/ale/ale_linters/go/golangci_lint.vim ~/.vim/ale_linter.vim
-fi
-
-
-if [ ! -e ~/.fonts/Fira_Code_v6.2.zip ]
-    then
-    mkdir -p ~/.fonts
-    cd ~/.fonts/
-    wget https://github.com/tonsky/FiraCode/releases/download/6.2/Fira_Code_v6.2.zip
-    unzip Fira_Code_v6.2.zip
-    fc-cache -f -v
-    cd -
-fi
-
-if [ ! -e ~/.fonts/Hasklig-1.2.zip ]
-    then
-    mkdir -p ~/.fonts
-    cd ~/.fonts/
-    wget https://github.com/i-tu/Hasklig/releases/download/v1.2/Hasklig-1.2.zip
-    unzip Hasklig-1.2.zip
-    fc-cache -f -v
-    cd -
 fi
 
 echo "ok, all set"
