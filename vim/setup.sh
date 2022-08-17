@@ -10,6 +10,7 @@ VIM_GO_URL=https://github.com/fatih/vim-go
 ALE_URL=https://github.com/dense-analysis/ale
 GIT_URL=https://github.com/tpope/vim-fugitive
 EM_URL=https://github.com/easymotion/vim-easymotion
+COMMITTIA_URL=https://github.com/rhysd/committia.vim
 
 
 function vim_plugin {
@@ -31,6 +32,7 @@ vim_plugin $VIM_GO_URL
 vim_plugin $ALE_URL
 vim_plugin $GIT_URL
 vim_plugin $EM_URL
+vim_plugin $COMMITTIA_URL
 
 if [ ! -e ~/.vimrc ]
     then
@@ -55,12 +57,23 @@ fi
 
 
 if [ ! -e ~/.fonts/Fira_Code_v6.2.zip ]
-        then
+    then
     mkdir -p ~/.fonts
     cd ~/.fonts/
     wget https://github.com/tonsky/FiraCode/releases/download/6.2/Fira_Code_v6.2.zip
     unzip Fira_Code_v6.2.zip
     fc-cache -f -v
+	cd -
+fi
+
+if [ ! -e ~/.fonts/Hasklig-1.2.zip ]
+	then
+	mkdir -p ~/.fonts
+    cd ~/.fonts/
+    wget https://github.com/i-tu/Hasklig/releases/download/v1.2/Hasklig-1.2.zip
+	unzip Hasklig-1.2.zip
+	fc-cache -f -v
+	cd -
 fi
 
 echo "ok, all set"
