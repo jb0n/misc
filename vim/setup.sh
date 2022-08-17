@@ -63,17 +63,17 @@ if [ ! -e ~/.fonts/Fira_Code_v6.2.zip ]
     wget https://github.com/tonsky/FiraCode/releases/download/6.2/Fira_Code_v6.2.zip
     unzip Fira_Code_v6.2.zip
     fc-cache -f -v
-	cd -
+    cd -
 fi
 
 if [ ! -e ~/.fonts/Hasklig-1.2.zip ]
-	then
-	mkdir -p ~/.fonts
+    then
+    mkdir -p ~/.fonts
     cd ~/.fonts/
     wget https://github.com/i-tu/Hasklig/releases/download/v1.2/Hasklig-1.2.zip
-	unzip Hasklig-1.2.zip
-	fc-cache -f -v
-	cd -
+    unzip Hasklig-1.2.zip
+    fc-cache -f -v
+    cd -
 fi
 
 echo "ok, all set"
