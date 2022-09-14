@@ -78,5 +78,7 @@ if [ ! -h ~/.vim/ale_linter.vim ]
     ln -s ~/.vim/pack/plugins/start/ale/ale_linters/go/golangci_lint.vim ~/.vim/ale_linter.vim
 fi
 
+vim -esN +GoInstallBinaries +q
+
 echo "ok, all set"
 
