@@ -8,4 +8,5 @@ colorscheme eldar
 
 set hlsearch
 
-source ~/.vim/plugins/ale.vim
+nnoremap <F12> :ALEToggle<CR>
+
