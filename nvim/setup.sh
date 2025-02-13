@@ -10,6 +10,7 @@ GIT_URL=https://github.com/tpope/vim-fugitive
 EM_URL=https://github.com/easymotion/vim-easymotion
 COMMITTIA_URL=https://github.com/rhysd/committia.vim
 AIRLINE_URL=https://github.com/vim-airline/vim-airline
+RAINBOW_URL=https://gitlab.com/HiPhish/rainbow-delimiters.nvim
 
 function nvim_plugin {
     iname=$(basename "$1")
@@ -26,12 +27,13 @@ function nvim_plugin {
 }
 
 mkdir -p $NVIM_PLUGINS_DIR
-nvim_plugin $NVIM_GO_URL
-nvim_plugin $ALE_URL
-nvim_plugin $GIT_URL
-nvim_plugin $EM_URL
-nvim_plugin $COMMITTIA_URL
-nvim_plugin $AIRLINE_URL
+#nvim_plugin $NVIM_GO_URL
+#nvim_plugin $ALE_URL
+#nvim_plugin $GIT_URL
+#nvim_plugin $EM_URL
+#nvim_plugin $COMMITTIA_URL
+#nvim_plugin $AIRLINE_URL
+#nvim_plugin $RAINBOW_URL
 
 if [ ! -e ~/.config/nvim/init.vim ]
     then

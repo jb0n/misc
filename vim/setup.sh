@@ -4,7 +4,7 @@ set -e
 #set -v
 
 sudo apt-get install git vim
-VIM_PLUGINS_DIR=~/.vim/pack/plugins/start
+VIM_PLUGINS_DIR=~/.vim/pack/git-plugins/start
 
 VIM_GO_URL=https://github.com/fatih/vim-go
 ALE_URL=https://github.com/dense-analysis/ale
@@ -25,7 +25,7 @@ function vim_plugin {
         echo "installing $1"
         git clone --depth=1 "$1" "$idir"
     else
-       echo "updating $1"
+       echo "updating $1 (in $idir)"
        cd "$idir" && git pull
        cd -
     fi
