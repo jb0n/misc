@@ -47,6 +47,36 @@ echo "installed $KB_FILE (restart apps to pick it up)"
 
 
 #---------------------------------------------------------------------
+# ghostty
+#---------------------------------------------------------------------
+if [ -d "/Applications/Ghostty.app" ]; then
+    echo "ghostty already installed"
+else
+    echo "installing ghostty..."
+    brew install --cask ghostty
+fi
+
+#the config asks for Hasklig, so make sure it exists or ghostty silently
+#falls back to a default font
+if ls ~/Library/Fonts /Library/Fonts 2>/dev/null | grep -qi hasklig; then
+    echo "hasklig already installed"
+else
+    echo "installing hasklig..."
+    brew install --cask font-hasklig
+fi
+
+GHOSTTY_DIR="$HOME/.config/ghostty"
+GHOSTTY_FILE="$GHOSTTY_DIR/config"
+mkdir -p "$GHOSTTY_DIR"
+if [ -f "$GHOSTTY_FILE" ] && ! cmp -s "$HERE/ghostty.config" "$GHOSTTY_FILE"; then
+    cp "$GHOSTTY_FILE" "$GHOSTTY_FILE.bak.$(date +%Y%m%d%H%M%S)"
+    echo "backed up existing $GHOSTTY_FILE"
+fi
+cp "$HERE/ghostty.config" "$GHOSTTY_FILE"
+echo "installed $GHOSTTY_FILE"
+
+
+#---------------------------------------------------------------------
 # karabiner-elements: make ctrl work like cmd, everywhere except terminals
 #
 # this does NOT swap anything -- cmd keeps working exactly as it does now.
