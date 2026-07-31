@@ -11,6 +11,13 @@ defaults write com.apple.dock autohide-time-modifier -float 0.4
 killall Dock
 
 
+#stop dragging a window to the menu bar from filling the screen
+#(System Settings > Desktop & Dock > Windows > "Drag windows to menu bar
+# to fill screen"). side-edge tiling is left alone.
+defaults write com.apple.WindowManager EnableTopTilingByEdgeDrag -bool false
+killall WindowManager 2>/dev/null || true
+
+
 #---------------------------------------------------------------------
 # homebrew
 #---------------------------------------------------------------------
