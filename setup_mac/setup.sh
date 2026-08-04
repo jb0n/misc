@@ -96,14 +96,17 @@ else
     brew install --cask karabiner-elements
 fi
 
-#apps that keep real ctrl. regex, so uninstalled ones are harmless.
+#apps that keep real ctrl -- terminals, plus VMs where the guest OS wants the
+#real ctrl key. regex, so uninstalled ones are harmless.
 COND='{ "type": "frontmost_application_unless", "bundle_identifiers": [
             "^com\\.apple\\.Terminal$",
             "^com\\.mitchellh\\.ghostty$",
             "^com\\.googlecode\\.iterm2$",
             "^org\\.alacritty$",
             "^net\\.kovidgoyal\\.kitty$",
-            "^com\\.github\\.wez\\.wezterm$"
+            "^com\\.github\\.wez\\.wezterm$",
+            "^com\\.vmware\\.fusion$",
+            "^com\\.utmapp\\.UTM(-SE)?$"
           ] }'
 
 MANIPS=""
