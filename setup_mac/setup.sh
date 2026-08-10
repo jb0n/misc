@@ -19,6 +19,32 @@ killall WindowManager 2>/dev/null || true
 
 
 #---------------------------------------------------------------------
+# top row sends real F1-F12, and dictation stops hijacking F5
+#
+# by default macOS treats the top row as media keys, so pressing F5 sends the
+# dictation key instead of F5 -- that is the "do you want to enable dictation?"
+# nag, and the reason VMs never see F5 at all. flipping fnState makes F5 a real
+# F5 everywhere (VMs, terminals, browsers). brightness/volume on the built-in
+# keyboard still work, they just need fn held down now (fn+F1/F2, fn+F10-F12).
+#---------------------------------------------------------------------
+defaults write NSGlobalDomain com.apple.keyboard.fnState -bool true
+
+#belt and braces on dictation: no auto-enable prompt, master switch off, and
+#the dictation hotkey (symbolic hotkey 164, i.e. press-F5 / press-ctrl-twice)
+#left disabled with no key assigned.
+defaults write com.apple.HIToolbox AppleDictationAutoEnable -int 0
+defaults write com.apple.speech.recognition.AppleSpeechRecognition.prefs \
+    DictationIMMasterDictationEnabled -bool false
+defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 164 \
+    '{ enabled = 0; value = { parameters = (65535, 65535, 0); type = standard; }; }'
+
+#nudge the window server into re-reading the hotkey/keyboard prefs so this
+#mostly takes effect without a logout
+ACTIVATE_SETTINGS="/System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings"
+[ -x "$ACTIVATE_SETTINGS" ] && "$ACTIVATE_SETTINGS" -u >/dev/null 2>&1 || true
+
+
+#---------------------------------------------------------------------
 # homebrew
 #---------------------------------------------------------------------
 if command -v brew >/dev/null 2>&1; then
@@ -109,6 +135,24 @@ COND='{ "type": "frontmost_application_unless", "bundle_identifiers": [
             "^com\\.utmapp\\.UTM(-SE)?$"
           ] }'
 
+#browsers, for the F5 = reload rule further down. deliberately an allowlist and
+#not an "everything except" list: F5 has real meanings elsewhere (VS Code starts
+#debugging, JetBrains runs), and VMs/terminals need the raw key. add a line here
+#if you pick up a browser that is not covered.
+BROWSER_COND='{ "type": "frontmost_application_if", "bundle_identifiers": [
+            "^com\\.apple\\.Safari(TechnologyPreview)?$",
+            "^com\\.google\\.Chrome",
+            "^org\\.chromium\\.Chromium$",
+            "^org\\.mozilla\\.(firefox|nightly)",
+            "^com\\.microsoft\\.edgemac",
+            "^com\\.brave\\.Browser",
+            "^com\\.operasoftware\\.",
+            "^com\\.vivaldi\\.Vivaldi$",
+            "^company\\.thebrowser\\.",
+            "^app\\.zen-browser\\.zen$",
+            "^com\\.kagi\\.kagimacOS$"
+          ] }'
+
 MANIPS=""
 add_manip() {
     [ -n "$MANIPS" ] && MANIPS="$MANIPS,"
@@ -195,6 +239,18 @@ cat > "$TMP_KARA" <<JSON
             "manipulators": [
 $MANIPS
             ]
+          },
+          {
+            "description": "F5 reloads the page in browsers (shift+F5 = hard reload)",
+            "manipulators": [
+              {
+                "type": "basic",
+                "from": { "key_code": "f5",
+                          "modifiers": { "optional": ["shift"] } },
+                "to": [ { "key_code": "r", "modifiers": ["left_command"] } ],
+                "conditions": [ $BROWSER_COND ]
+              }
+            ]
           }
         ]
       }
@@ -243,4 +299,9 @@ watches karabiner.json and reloads it live.
 
 heads up: re-running clobbers any rules you added in the karabiner GUI.
 add them to this script instead (a .bak is written either way).
+
+also: the F1-F12 / dictation prefs may need a log out and back in before the
+window server picks them up. verify with System Settings > Keyboard, where
+"Use F1, F2, etc. keys as standard function keys" should be on and the
+Dictation shortcut should read "Off".
 NOTE
