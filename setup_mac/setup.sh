@@ -283,6 +283,38 @@ fi
 mv "$TMP_KARA" "$KARA_FILE"
 echo "installed $KARA_FILE"
 
+
+#---------------------------------------------------------------------
+# hammerspoon: ctrl-click acts as cmd-click in browsers (opens links in
+# new tabs). an event tap, not karabiner, so the physical mouse is never
+# grabbed -- that is what broke the mouse before. do not re-add mouse
+# rules to karabiner.
+#---------------------------------------------------------------------
+if [ -d "/Applications/Hammerspoon.app" ]; then
+    echo "hammerspoon already installed"
+else
+    echo "installing hammerspoon..."
+    brew install --cask hammerspoon
+fi
+
+HS_DIR="$HOME/.hammerspoon"
+HS_FILE="$HS_DIR/init.lua"
+mkdir -p "$HS_DIR"
+if [ -f "$HS_FILE" ] && ! cmp -s "$HERE/hammerspoon.init.lua" "$HS_FILE"; then
+    cp "$HS_FILE" "$HS_FILE.bak.$(date +%Y%m%d%H%M%S)"
+    echo "backed up existing $HS_FILE"
+fi
+cp "$HERE/hammerspoon.init.lua" "$HS_FILE"
+echo "installed $HS_FILE"
+
+#launch at login, then (re)load the config now
+defaults write org.hammerspoon.Hammerspoon HSAutoLaunch -bool true
+open -g -a Hammerspoon
+if command -v hs >/dev/null 2>&1; then
+    sleep 2
+    hs -c "hs.reload()" >/dev/null 2>&1 || true
+fi
+
 cat <<'NOTE'
 
 karabiner needs two things granted by hand the first time -- macOS will not
@@ -304,4 +336,16 @@ also: the F1-F12 / dictation prefs may need a log out and back in before the
 window server picks them up. verify with System Settings > Keyboard, where
 "Use F1, F2, etc. keys as standard function keys" should be on and the
 Dictation shortcut should read "Off".
+
+hammerspoon needs two permissions granted by hand (macOS will not let a
+script do either of them):
+
+  1. System Settings > Privacy & Security > Accessibility
+     enable Hammerspoon (needed to post the rewritten click)
+  2. System Settings > Privacy & Security > Input Monitoring
+     enable Hammerspoon (needed to see the click first)
+
+without both, ctrl-click in browsers keeps acting as a plain right-click.
+Hammerspoon is set to launch at login, and ~/.hammerspoon/init.lua is the
+config this script installs (a .bak is written if it differs).
 NOTE
