@@ -1,5 +1,18 @@
 # AGENTS.md
 
+## No machine edits outside this repo (2026-08-27)
+
+- NEVER edit the machine outside of this git repo: no OS-level changes, no
+  touching `~/.config`, `~/bin`, `~/.bashrc`, `/etc`, installed files, or any
+  state that a `git checkout` cannot undo.
+- If a change needs to land on the machine, write it as a file/script/module in
+  this repo (e.g. `setup_mac/`, `setup_linux/`, `setup_linux_3rd_party/`) so it
+  is committed, reversible, and applied by running the setup — not by mutating
+  the machine directly.
+- Exception: creating/modifying files inside this repo's own working tree is
+  fine. Anything else needs explicit approval from the user first.
+- If you already made an out-of-repo edit by mistake, say so and revert it.
+
 ## Karabiner mouse / ctrl-click status (2026-08-24)
 
 - Goal: ctrl-click opens a link in a new tab in browsers (acts as cmd-click). SOLVED 2026-08-25 via Hammerspoon eventtap, not Karabiner.
